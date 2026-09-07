@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CBT PSTS XI TKR - SMK Karya Bahana Mandiri</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2canvas for Image/PNG Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- jsPDF for Document Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        tkr: {
+                            accent: '#f59e0b',
+                            dark: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @media print {
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- App Header -->
+    <header class="bg-slate-900 text-white shadow-md border-b-4 border-amber-500 no-print sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-full border-2 border-amber-400 bg-amber-500 text-slate-900 font-black text-xs flex items-center justify-center shadow">
+                    KBM
+                </div>
+                <div>
+                    <h1 class="font-bold text-sm md:text-base text-amber-400 tracking-wide uppercase">SMK Karya Bahana Mandiri</h1>
+                    <p class="text-xs text-slate-300 font-medium">CBT PSTS GANJIL • XI TKR (TEKNIK KENDARAAN RINGAN)</p>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-3">
+                <button onclick="openTeacherModal()" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs rounded-lg transition flex items-center space-x-1.5 shadow-md">
+                    <i class="fa-solid fa-user-shield"></i>
+                    <span class="hidden sm:inline">Rekap Nilai Guru</span>
+                </button>
+                <div id="header-user-info" class="hidden md:flex items-center space-x-3 text-xs bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-700">
+                    <i class="fa-solid fa-user-circle text-amber-400 text-lg"></i>
+                    <div>
+                        <span id="nav-student-name" class="font-semibold block text-slate-200">Siswa</span>
+                        <span id="nav-student-info" class="text-slate-400">XI TKR 5 • Mapel</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto w-full px-4 py-6 flex-grow">
+
+        <!-- VIEW 1: REGISTRATION / START EXAM -->
+        <div id="view-login" class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-200">
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-6 text-white text-center border-b border-amber-500">
+                <div class="inline-flex p-3 bg-amber-500/20 rounded-full mb-3 text-amber-400">
+                    <i class="fa-solid fa-car-wrench text-3xl"></i>
+                </div>
+                <h2 class="text-xl font-bold uppercase tracking-wider">Penilaian Sumatif Tengah Semester</h2>
+                <p class="text-xs text-slate-300 mt-1">Kompetensi Keahlian Teknik Kendaraan Ringan (TKR)</p>
+            </div>
+
+            <div class="p-6 md:p-8 space-y-6">
+                <!-- Schedule Banner -->
+                <div id="schedule-status-banner" class="p-4 rounded-xl border bg-amber-50 border-amber-200 text-amber-900 space-y-1.5">
+                    <div class="flex items-center justify-between">
+                        <span class="text-xs font-bold uppercase tracking-wide flex items-center gap-1.5">
+                            <i class="fa-solid fa-calendar-clock text-amber-600"></i> Sesi Ujian Otomatis
+                        </span>
+                        <span id="session-badge" class="px-2.5 py-0.5 text-[10px] font-extrabold rounded-full bg-amber-200 text-amber-800 uppercase">
+                            Mengecek Jadwal...
+                        </span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-600">Jam Pengerjaan (2 Mapel):</span>
+                        <strong class="font-mono text-slate-900 font-bold">13:10 - 15:30 WIB</strong>
+                    </div>
+                    <div class="flex items-center justify-between text-xs">
+                        <span class="text-slate-600">Waktu Server Sekarang:</span>
+                        <span id="current-server-time" class="font-mono font-bold text-slate-800">13:10:00 WIB</span>
+                    </div>
+                </div>
+
+                <!-- Info Cards -->
+                <div class="grid grid-cols-2 gap-3 text-center text-xs">
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                        <i class="fa-regular fa-clock text-amber-500 text-base mb-1 block"></i>
+                        <span class="text-slate-500 block">Durasi per Mapel</span>
+                        <span class="font-bold text-slate-800">Max 60 Menit</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                        <i class="fa-solid fa-list-check text-blue-500 text-base mb-1 block"></i>
+                        <span class="text-slate-500 block">Jumlah Soal</span>
+                        <span class="font-bold text-slate-800">25 Soal / Mapel</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                        <i class="fa-solid fa-award text-emerald-500 text-base mb-1 block"></i>
+                        <span class="text-slate-500 block">Nilai KKM</span>
+                        <span class="font-bold text-emerald-600">78 (Kompeten)</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl">
+                        <i class="fa-solid fa-rotate-right text-purple-500 text-base mb-1 block"></i>
+                        <span class="text-slate-500 block">Batas Percobaan</span>
+                        <span id="login-attempts-badge" class="font-bold text-slate-800">3x Ujian</span>
+                    </div>
+                </div>
+
+                <form id="form-login" onsubmit="startExam(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Nama Lengkap Siswa</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                <i class="fa-solid fa-user"></i>
+                            </span>
+                            <input type="text" id="input-name" required placeholder="Masukkan Nama Lengkap" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:bg-white focus:outline-none transition">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">NIS / NISN</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                    <i class="fa-solid fa-id-card"></i>
+                                </span>
+                                <input type="text" id="input-nis" required placeholder="Contoh: 23241012" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:bg-white focus:outline-none transition">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Rombel / Kelas</label>
+                            <div class="relative">
+                                <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                    <i class="fa-solid fa-school"></i>
+                                </span>
+                                <select id="input-class" required class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:bg-white focus:outline-none transition">
+                                    <option value="XI TKR 5" selected>XI TKR 5 (Kelas Utama)</option>
+                                    <option value="XI TKR 1">XI TKR 1</option>
+                                    <option value="XI TKR 2">XI TKR 2</option>
+                                    <option value="XI TKR 3">XI TKR 3</option>
+                                    <option value="XI TKR 4">XI TKR 4</option>
+                                    <option value="XI TKR 6">XI TKR 6</option>
+                                    <option value="XI TKR 7">XI TKR 7</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1.5">Mata Pelajaran Ujian</label>
+                        <div class="relative">
+                            <span class="absolute inset-y-0 left-0 flex items-center pl-3.5 text-slate-400">
+                                <i class="fa-solid fa-book-open"></i>
+                            </span>
+                            <select id="input-subject" required onchange="handleSubjectChange()" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:bg-white focus:outline-none transition font-semibold text-slate-800">
+                                <option value="kk_tkr">1. KOMPETENSI KEAHLIAN TKR</option>
+                                <option value="mulok_tkr">2. MULOK PRODUKTIF TKR</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="login-warning" class="hidden p-3 bg-red-50 border border-red-200 text-red-700 rounded-xl text-xs flex items-center space-x-2">
+                        <i class="fa-solid fa-triangle-exclamation text-red-500 text-sm"></i>
+                        <span id="login-warning-text">Kesempatan ujian untuk mata pelajaran ini telah habis!</span>
+                    </div>
+
+                    <div class="flex items-center justify-between p-2.5 bg-slate-50 rounded-xl border border-slate-200 text-xs">
+                        <span class="text-slate-600 font-medium">Bypass Jadwal (Mode Penguji/Simulasi)</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="toggle-schedule-bypass" onchange="updateScheduleStatus()" class="sr-only peer">
+                            <div class="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="btn-start" class="w-full py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-900 font-bold rounded-xl shadow-lg hover:shadow-xl transition duration-200 flex items-center justify-center space-x-2">
+                        <span>Mulai Kerjakan Ujian</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW 2: EXAM WORKSPACE -->
+        <div id="view-exam" class="hidden space-y-4">
+            
+            <!-- Top Controls & Timer Bar -->
+            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                <!-- Info Section -->
+                <div class="flex items-center space-x-3">
+                    <button onclick="confirmExitExam()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg flex items-center space-x-1.5 border border-slate-300 transition">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Kembali</span>
+                    </button>
+                    <span id="badge-category" class="px-3 py-1 bg-sky-100 text-sky-800 text-xs font-bold rounded-full uppercase tracking-wide">
+                        Kategori Soal
+                    </span>
+                    <span class="text-xs text-slate-500">Soal <strong id="current-q-num" class="text-slate-900">1</strong> dari 25</span>
+                </div>
+
+                <!-- Timer & Progress -->
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2 bg-slate-900 text-amber-400 px-4 py-1.5 rounded-xl font-mono text-sm font-bold shadow-inner">
+                        <i class="fa-regular fa-clock text-xs animate-pulse"></i>
+                        <span id="exam-timer">60:00</span>
+                    </div>
+                    <button onclick="toggleMobileGrid()" class="md:hidden px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-lg flex items-center space-x-1">
+                        <i class="fa-solid fa-border-all"></i>
+                        <span>Navigasi</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Main Workspace Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+                
+                <!-- Question Column (3 cols) -->
+                <div class="lg:col-span-3 space-y-4">
+                    <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 md:p-8 min-h-[420px] flex flex-col justify-between">
+                        <!-- Question Text -->
+                        <div class="space-y-4">
+                            <div class="flex items-start justify-between">
+                                <h3 class="text-xs font-bold text-slate-400 uppercase tracking-wider">Soal No. <span id="q-number-title">1</span></h3>
+                                <span id="q-points-badge" class="text-xs font-medium text-slate-500 bg-slate-100 px-2.5 py-1 rounded-md">Bobot: 4 Poin</span>
+                            </div>
+                            <p id="q-text" class="text-slate-800 text-base md:text-lg font-medium leading-relaxed">
+                                Loading soal...
+                            </p>
+
+                            <!-- Options List -->
+                            <div id="q-options" class="space-y-3 pt-4">
+                                <!-- Dynamic Options A-E -->
+                            </div>
+                        </div>
+
+                        <!-- Action Controls -->
+                        <div class="flex flex-wrap items-center justify-between gap-3 pt-8 border-t border-slate-100 mt-6">
+                            <button id="btn-prev" onclick="prevQuestion()" class="px-5 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-xs rounded-xl transition flex items-center space-x-2">
+                                <i class="fa-solid fa-chevron-left"></i>
+                                <span>Sebelumnya</span>
+                            </button>
+
+                            <button id="btn-flag" onclick="toggleFlag()" class="px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold text-xs rounded-xl border border-amber-200 transition flex items-center space-x-2">
+                                <i class="fa-regular fa-flag"></i>
+                                <span id="flag-btn-text">Ragu-Ragu</span>
+                            </button>
+
+                            <button id="btn-next" onclick="nextQuestion()" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs rounded-xl shadow transition flex items-center space-x-2">
+                                <span>Berikutnya</span>
+                                <i class="fa-solid fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Navigation Sidebar (1 col) -->
+                <div id="nav-grid-container" class="hidden lg:block bg-white rounded-2xl shadow-sm border border-slate-200 p-5 h-fit space-y-4">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <h4 class="font-bold text-xs uppercase tracking-wider text-slate-700">Nomor Soal</h4>
+                        <span id="answered-count-badge" class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">0/25 Terjawab</span>
+                    </div>
+
+                    <!-- Question Grid -->
+                    <div id="q-grid" class="grid grid-cols-5 gap-2 max-h-[360px] overflow-y-auto pr-1">
+                        <!-- Buttons 1-25 generated via JS -->
+                    </div>
+
+                    <!-- Legend -->
+                    <div class="pt-3 border-t border-slate-100 space-y-2 text-[11px] text-slate-600">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded bg-emerald-500 inline-block"></span>
+                            <span>Sudah Dijawab</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded bg-amber-400 inline-block"></span>
+                            <span>Ragu-Ragu</span>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="w-3 h-3 rounded bg-slate-200 border border-slate-300 inline-block"></span>
+                            <span>Belum Dijawab</span>
+                        </div>
+                    </div>
+
+                    <button onclick="confirmSubmit()" class="w-full mt-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-md transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        <span>Selesaikan Ujian</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- VIEW 3: RESULTS SCREEN -->
+        <div id="view-result" class="hidden space-y-6 max-w-4xl mx-auto">
+            
+            <!-- Result Summary Card -->
+            <div class="bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden">
+                <div id="result-header-bg" class="p-8 text-white text-center relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-700">
+                    <!-- Status Icon -->
+                    <div class="mb-4 inline-flex items-center justify-center w-20 h-20 rounded-full bg-white/20 backdrop-blur-sm border-2 border-white/40 shadow-inner">
+                        <i id="result-status-icon" class="fa-solid fa-trophy text-4xl text-amber-300"></i>
+                    </div>
+                    <h2 id="result-status-title" class="text-2xl md:text-3xl font-extrabold uppercase tracking-wide">KOMPETEN</h2>
+                    <p id="result-status-subtitle" class="text-xs md:text-sm opacity-90 mt-1 max-w-md mx-auto">Selamat! Anda telah mencapai kriteria ketuntasan minimal (KKM 78).</p>
+                    
+                    <!-- Score Circle Badge -->
+                    <div class="mt-6 inline-flex items-center justify-center bg-white text-slate-900 px-6 py-3 rounded-2xl shadow-2xl space-x-3 border-2 border-amber-400">
+                        <div class="text-left">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase block tracking-wider">NILAI AKHIR</span>
+                            <span id="result-score-val" class="text-3xl font-black text-slate-900 leading-none">88</span>
+                        </div>
+                        <div class="h-8 w-px bg-slate-200"></div>
+                        <div class="text-left">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase block tracking-wider">KKM</span>
+                            <span class="text-xl font-extrabold text-emerald-600">78</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-6 md:p-8 space-y-6">
+                    <!-- Breakdown Stats -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center">
+                            <span class="text-xs text-slate-500 font-medium block mb-1">Jumlah Benar</span>
+                            <span id="res-correct" class="text-2xl font-bold text-emerald-600">22</span>
+                        </div>
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center">
+                            <span class="text-xs text-slate-500 font-medium block mb-1">Jumlah Salah</span>
+                            <span id="res-wrong" class="text-2xl font-bold text-red-500">3</span>
+                        </div>
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center">
+                            <span class="text-xs text-slate-500 font-medium block mb-1">Tidak Dijawab</span>
+                            <span id="res-empty" class="text-2xl font-bold text-slate-400">0</span>
+                        </div>
+                        <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl text-center">
+                            <span class="text-xs text-slate-500 font-medium block mb-1">Percobaan Ke-</span>
+                            <span id="res-attempt" class="text-2xl font-bold text-purple-600">1 / 3</span>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="flex flex-wrap items-center justify-center gap-4 pt-4 border-t border-slate-100">
+                        <button onclick="goBackToHome()" class="px-6 py-3 bg-slate-700 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center space-x-2">
+                            <i class="fa-solid fa-house"></i>
+                            <span>Kembali ke Halaman Utama</span>
+                        </button>
+
+                        <button onclick="downloadAsPDF()" class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center space-x-2">
+                            <i class="fa-solid fa-file-pdf text-base"></i>
+                            <span>Download Hasil (PDF)</span>
+                        </button>
+                        
+                        <button onclick="downloadAsImage()" class="px-6 py-3 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center space-x-2">
+                            <i class="fa-solid fa-file-image text-base"></i>
+                            <span>Download Hasil (Gambar PNG)</span>
+                        </button>
+
+                        <button id="btn-retry" onclick="retryExam()" class="px-6 py-3 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold text-xs rounded-xl shadow-md transition flex items-center space-x-2">
+                            <i class="fa-solid fa-rotate-right"></i>
+                            <span>Ulangi Ujian (<span id="retry-left-count">2</span>x Sisa)</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRINTABLE CERTIFICATE TEMPLATE -->
+            <div class="overflow-x-auto">
+                <div id="printable-certificate" class="bg-white p-8 md:p-10 rounded-2xl border-2 border-slate-300 shadow-lg min-w-[750px] space-y-6 text-slate-800">
+                    <!-- Header Sekolah -->
+                    <div class="flex items-center justify-between border-b-4 border-slate-900 pb-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-16 h-16 rounded-full border-2 border-slate-900 bg-amber-500 text-slate-900 font-black text-lg flex items-center justify-center">
+                                KBM
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-black tracking-wide text-slate-900 uppercase">SMK KARYA BAHANA MANDIRI</h3>
+                                <p class="text-xs text-slate-600">Teknik Otomotif - Kompetensi Keahlian Teknik Kendaraan Ringan (TKR)</p>
+                                <p class="text-[10px] text-slate-400">Jl. Raya Karya Bahana Mandiri, Kota Bekasi, Jawa Barat</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-block px-3 py-1 bg-slate-900 text-amber-400 text-xs font-bold rounded">LEMBAR HASIL UJIAN</span>
+                            <p class="text-[10px] text-slate-500 mt-1">PSTS GANJIL TP. 2026/2027</p>
+                        </div>
+                    </div>
+
+                    <!-- Title -->
+                    <div class="text-center space-y-1">
+                        <h2 class="text-xl font-bold uppercase tracking-wider text-slate-900">SURAT KETERANGAN HASIL UJIAN (SKHU)</h2>
+                        <p class="text-xs font-medium bg-slate-800 text-amber-300 inline-block px-3 py-1 rounded">Mata Pelajaran: <span id="cert-subject-title">KOMPETENSI KEAHLIAN TKR</span></p>
+                    </div>
+
+                    <!-- Biodata Table -->
+                    <div class="grid grid-cols-2 gap-6 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div class="space-y-1.5">
+                            <p class="flex justify-between"><span class="text-slate-500">Nama Siswa:</span> <strong id="cert-name" class="text-slate-900">Siswa</strong></p>
+                            <p class="flex justify-between"><span class="text-slate-500">NIS / NISN:</span> <strong id="cert-nis" class="text-slate-900">-</strong></p>
+                            <p class="flex justify-between"><span class="text-slate-500">Kelas / Rombel:</span> <strong id="cert-class" class="text-slate-900">XI TKR 5</strong></p>
+                        </div>
+                        <div class="space-y-1.5">
+                            <p class="flex justify-between"><span class="text-slate-500">Tanggal Ujian:</span> <strong id="cert-date" class="text-slate-900">-</strong></p>
+                            <p class="flex justify-between"><span class="text-slate-500">Waktu Pengerjaan:</span> <strong id="cert-duration" class="text-slate-900">-</strong></p>
+                            <p class="flex justify-between"><span class="text-slate-500">Percobaan Ujian:</span> <strong id="cert-attempt" class="text-slate-900">Ke-1</strong></p>
+                        </div>
+                    </div>
+
+                    <!-- Score Table -->
+                    <table class="w-full text-xs text-left border-collapse border border-slate-300">
+                        <thead>
+                            <tr class="bg-slate-900 text-white font-bold">
+                                <th class="p-2.5 border border-slate-300">Mata Pelajaran</th>
+                                <th class="p-2.5 border border-slate-300 text-center">Jumlah Soal</th>
+                                <th class="p-2.5 border border-slate-300 text-center">KKM</th>
+                                <th class="p-2.5 border border-slate-300 text-center">Nilai Siswa</th>
+                                <th class="p-2.5 border border-slate-300 text-center">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td id="cert-table-subject" class="p-2.5 border border-slate-300 font-semibold">Kompetensi Keahlian TKR (Kelas XI)</td>
+                                <td class="p-2.5 border border-slate-300 text-center">25 Soal</td>
+                                <td class="p-2.5 border border-slate-300 text-center font-bold">78</td>
+                                <td id="cert-score" class="p-2.5 border border-slate-300 text-center font-black text-sm">88</td>
+                                <td id="cert-status" class="p-2.5 border border-slate-300 text-center font-bold">
+                                    <span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800">KOMPETEN</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Footnote Signatures -->
+                    <div class="flex items-end justify-between pt-6 text-xs text-slate-700">
+                        <div class="text-center space-y-1">
+                            <p class="text-[10px] text-slate-400">Verifikasi Sistem CBT SMK KBM</p>
+                            <div class="p-2 border border-dashed border-slate-300 rounded bg-slate-50 inline-block font-mono text-[9px] text-slate-500">
+                                SIGNED-HASH: <span id="cert-hash">AUTH-8823-KBM</span>
+                            </div>
+                        </div>
+
+                        <div class="text-center space-y-10">
+                            <p>Bekasi, <span id="cert-sign-date">7 September 2026</span></p>
+                            <div class="font-bold border-b border-slate-800 pb-0.5 min-w-[160px]">
+                                Penguji / Guru Produktif TKR
+                            </div>
+                            <p class="text-[10px] text-slate-400">NIP. 19850412 201001 1 008</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- VIEW 4: TEACHER RECAP PORTAL -->
+        <div id="view-teacher-recap" class="hidden space-y-6 max-w-6xl mx-auto">
+            <div class="bg-white p-6 rounded-2xl shadow-md border border-slate-200 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center space-x-3">
+                    <div class="p-3 bg-amber-500 text-slate-900 rounded-xl">
+                        <i class="fa-solid fa-clipboard-list text-xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-bold text-lg text-slate-900">Rekapitulasi Nilai Ujian Siswa (Portal Guru TKR)</h2>
+                        <p class="text-xs text-slate-500">Daftar nilai hasil Penilaian Sumatif Tengah Semester TKR (Kelas XI TKR 1 - 7)</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="downloadRecapPDF()" class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center space-x-2">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span>Download Rekap PDF</span>
+                    </button>
+                    <button onclick="downloadRecapJPG()" class="px-4 py-2 bg-brand-600 hover:bg-brand-700 text-white font-bold text-xs rounded-xl shadow transition flex items-center space-x-2">
+                        <i class="fa-solid fa-file-image"></i>
+                        <span>Download Rekap JPG</span>
+                    </button>
+                    <button onclick="goBackToHome()" class="px-3 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Kembali</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Filters & Statistics -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-1">
+                    <span class="text-xs text-slate-500 font-medium block">Total Hasil Terrekap</span>
+                    <span id="recap-stat-total" class="text-2xl font-black text-slate-800">0</span>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-1">
+                    <span class="text-xs text-slate-500 font-medium block">Rata-Rata Nilai</span>
+                    <span id="recap-stat-avg" class="text-2xl font-black text-blue-600">0</span>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-1">
+                    <span class="text-xs text-slate-500 font-medium block">Siswa Kompeten (≥78)</span>
+                    <span id="recap-stat-passed" class="text-2xl font-black text-emerald-600">0</span>
+                </div>
+                <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-1">
+                    <span class="text-xs text-slate-500 font-medium block">Belum Kompeten (&lt;78)</span>
+                    <span id="recap-stat-failed" class="text-2xl font-black text-red-500">0</span>
+                </div>
+            </div>
+
+            <!-- Filter Controls -->
+            <div class="bg-white p-4 rounded-xl border border-slate-200 flex flex-wrap items-center justify-between gap-4 text-xs">
+                <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Filter Kelas</label>
+                        <select id="recap-filter-class" onchange="renderTeacherRecapTable()" class="px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none">
+                            <option value="ALL">Semua Kelas XI TKR</option>
+                            <option value="XI TKR 5">XI TKR 5 (Kelas Utama)</option>
+                            <option value="XI TKR 1">XI TKR 1</option>
+                            <option value="XI TKR 2">XI TKR 2</option>
+                            <option value="XI TKR 3">XI TKR 3</option>
+                            <option value="XI TKR 4">XI TKR 4</option>
+                            <option value="XI TKR 6">XI TKR 6</option>
+                            <option value="XI TKR 7">XI TKR 7</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-[10px] font-bold text-slate-500 uppercase mb-1">Filter Mapel</label>
+                        <select id="recap-filter-subject" onchange="renderTeacherRecapTable()" class="px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:outline-none font-semibold">
+                            <option value="ALL">Semua Mata Pelajaran</option>
+                            <option value="kk_tkr">1. KOMPETENSI KEAHLIAN TKR</option>
+                            <option value="mulok_tkr">2. MULOK PRODUKTIF TKR</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="flex items-center space-x-2 w-full md:w-auto">
+                    <input type="text" id="recap-search-input" onkeyup="renderTeacherRecapTable()" placeholder="Cari Nama / NIS..." class="px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg w-full md:w-60 focus:outline-none">
+                    <button onclick="clearAllRecapData()" class="px-3 py-2 bg-red-100 hover:bg-red-200 text-red-700 font-bold rounded-lg transition whitespace-nowrap" title="Hapus Semua Rekap">
+                        <i class="fa-solid fa-trash-can mr-1"></i> Reset Data
+                    </button>
+                </div>
+            </div>
+
+            <!-- Printable Recap Sheet Area -->
+            <div class="overflow-x-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+                <div id="printable-recap-sheet" class="bg-white p-6 rounded-xl space-y-6 text-slate-800 min-w-[800px]">
+                    <!-- Kop Sekolah -->
+                    <div class="flex items-center justify-between border-b-4 border-slate-900 pb-4">
+                        <div class="flex items-center space-x-4">
+                            <div class="w-14 h-14 rounded-full border-2 border-slate-900 bg-amber-500 text-slate-900 font-black flex items-center justify-center">
+                                KBM
+                            </div>
+                            <div>
+                                <h3 class="text-base font-black tracking-wide text-slate-900 uppercase">SMK KARYA BAHANA MANDIRI</h3>
+                                <p class="text-xs text-slate-600">Teknik Otomotif - Kompetensi Keahlian Teknik Kendaraan Ringan (XI TKR 1 - 7)</p>
+                                <p class="text-[10px] text-slate-400">PSTS GANJIL TAHUN PELAJARAN 2026/2027</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-block px-3 py-1 bg-amber-500 text-slate-900 text-xs font-extrabold rounded uppercase">LAPORAN REKAP NILAI</span>
+                            <p id="recap-sheet-date" class="text-[10px] text-slate-500 mt-1">Tanggal Cetak: 7 September 2026</p>
+                        </div>
+                    </div>
+
+                    <!-- Table Data -->
+                    <table class="w-full text-xs text-left border-collapse border border-slate-300">
+                        <thead>
+                            <tr class="bg-slate-900 text-white font-bold text-center">
+                                <th class="p-2 border border-slate-300 w-10">No</th>
+                                <th class="p-2 border border-slate-300">Waktu Ujian</th>
+                                <th class="p-2 border border-slate-300">Nama Siswa</th>
+                                <th class="p-2 border border-slate-300 w-24">NIS</th>
+                                <th class="p-2 border border-slate-300 w-24">Kelas</th>
+                                <th class="p-2 border border-slate-300">Mata Pelajaran</th>
+                                <th class="p-2 border border-slate-300 w-16">Ke-</th>
+                                <th class="p-2 border border-slate-300 w-16">Nilai</th>
+                                <th class="p-2 border border-slate-300 w-28">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="recap-table-body">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+
+                    <!-- Tanda Tangan Guru -->
+                    <div class="flex justify-between items-end pt-6 text-xs text-slate-700">
+                        <div class="text-slate-400 text-[10px]">
+                            * KKM Kompetensi Keahlian TKR = 78
+                        </div>
+                        <div class="text-center space-y-10">
+                            <p>Bekasi, <span id="recap-sign-date">7 September 2026</span></p>
+                            <div class="font-bold border-b border-slate-800 pb-0.5 min-w-[180px]">
+                                Guru Pengampu / Wali Kelas XI TKR 5
+                            </div>
+                            <p class="text-[10px] text-slate-400">SMK Karya Bahana Mandiri</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Teacher Login Password Modal -->
+    <div id="modal-teacher-auth" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-sm w-full p-6 space-y-5">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full inline-flex items-center justify-center text-xl mb-1">
+                    <i class="fa-solid fa-lock"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Akses Portal Guru</h3>
+                <p class="text-xs text-slate-500">Masukkan password guru untuk membuka rekapitulasi nilai siswa.</p>
+            </div>
+
+            <form onsubmit="verifyTeacherPassword(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 uppercase tracking-wider mb-1">Password Guru</label>
+                    <input type="password" id="input-teacher-pass" required placeholder="Masukkan Password (cth: TKR 5)" class="w-full px-4 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 focus:bg-white focus:outline-none">
+                </div>
+
+                <div id="pass-error-msg" class="hidden p-2.5 bg-red-50 border border-red-200 text-red-600 text-xs rounded-xl font-medium text-center">
+                    Password salah! Gunakan: TKR 5
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <button type="button" onclick="closeTeacherModal()" class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+                        Batal
+                    </button>
+                    <button type="submit" class="py-2.5 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold rounded-xl text-xs shadow transition">
+                        Masuk Rekap
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Submit Confirmation Modal -->
+    <div id="modal-confirm" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6 space-y-5">
+            <div class="text-center space-y-2">
+                <div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-full inline-flex items-center justify-center text-xl mb-1">
+                    <i class="fa-solid fa-circle-question"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-900">Konfirmasi Selesai Ujian</h3>
+                <p class="text-xs text-slate-500">Apakah Anda yakin ingin menyelesaikan ujian sekarang? Periksa kembali kelengkapan jawaban Anda.</p>
+            </div>
+
+            <!-- Summary Table -->
+            <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs space-y-2">
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Sudah Dijawab:</span>
+                    <strong id="modal-count-answered" class="text-emerald-600">25 Soal</strong>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Masih Ragu-Ragu:</span>
+                    <strong id="modal-count-flagged" class="text-amber-500">0 Soal</strong>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-500">Belum Dijawab:</span>
+                    <strong id="modal-count-empty" class="text-red-500">0 Soal</strong>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3 pt-2">
+                <button onclick="closeModal()" class="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl text-xs transition">
+                    Kembali Periksa
+                </button>
+                <button onclick="finalizeExam()" class="py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs shadow-md transition">
+                    Ya, Kumpulkan
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Drawer Question Navigation -->
+    <div id="drawer-mobile-grid" class="fixed inset-0 bg-slate-900/50 z-40 hidden md:hidden flex justify-end">
+        <div class="bg-white w-4/5 max-w-xs h-full p-5 space-y-4 shadow-xl flex flex-col justify-between overflow-y-auto">
+            <div class="space-y-4">
+                <div class="flex items-center justify-between border-b pb-3">
+                    <h4 class="font-bold text-sm text-slate-800">Navigasi Soal</h4>
+                    <button onclick="toggleMobileGrid()" class="text-slate-400 hover:text-slate-600 text-lg">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div id="q-grid-mobile" class="grid grid-cols-5 gap-2">
+                    <!-- Cloned via JS -->
+                </div>
+            </div>
+            <button onclick="toggleMobileGrid(); confirmSubmit();" class="w-full py-2.5 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow">
+                Selesaikan Ujian
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 text-center py-3 text-xs border-t border-slate-800 no-print mt-6">
+        <p>&copy; 2026 SMK Karya Bahana Mandiri • Kompetensi Keahlian Teknik Kendaraan Ringan (XI TKR 1 - 7)</p>
+    </footer>
+
+    <script>
+        // -------------------------------------------------------------
+        // CONSTANTS & EXAM STATE
+        // -------------------------------------------------------------
+        const KKM_SCORE = 78;
+        const MAX_ATTEMPTS = 3;
+        const TIME_LIMIT_SECONDS = 3600; // 60 minutes
+        const TEACHER_PASSWORD = "TKR 5";
+
+        const SCHEDULE = {
+            startHour: 13,
+            startMin: 10,
+            endHour: 15,
+            endMin: 30
+        };
+
+        let currentStudent = {
+            name: '',
+            nis: '',
+            studentClass: 'XI TKR 5',
+            selectedSubject: 'kk_tkr',
+            attempts: {
+                kk_tkr: 0,
+                mulok_tkr: 0
+            }
+        };
+
+        let activeQuestions = [];
+        let currentIndex = 0;
+        let studentAnswers = [];
+        let flaggedQuestions = [];
+        let timeRemaining = TIME_LIMIT_SECONDS;
+        let timerInterval = null;
+
+        // QUESTION BANK 1: KOMPETENSI KEAHLIAN TKR (25 Questions)
+        const questionsKK_TKR = [
+            {
+                id: 1,
+                q: "Pada mesin bensin 4 langkah (4 stroke), apabila poros engkol (crankshaft) berputar sebanyak 2 kali putaran penuh (720 derajat), maka poros nok (camshaft) akan berputar sebanyak...",
+                options: {
+                    A: "0.5 kali putaran (180 derajat)",
+                    B: "1 kali putaran (360 derajat)",
+                    C: "2 kali putaran (720 derajat)",
+                    D: "4 kali putaran (1440 derajat)",
+                    E: "3 kali putaran (1080 derajat)"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 2,
+                q: "Fungsi utama dari celah katup (valve clearance) pada mesin kendaraan ringan adalah...",
+                options: {
+                    A: "Mencegah terjadinya kebocoran oli mesin ke ruang bakar",
+                    B: "Mempercepat proses pembakaran bahan bakar",
+                    C: "Mengantisipasi pemuaian batang katup akibat panas saat mesin bekerja",
+                    D: "Menambah tekanan kompresi pada putaran tinggi",
+                    E: "Memperbesar celah busi saat pemuaian"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 3,
+                q: "Pada sistem bahan bakar EFI (Electronic Fuel Injection), sensor yang berfungsi mengukur jumlah atau massa udara yang masuk ke dalam intake manifold adalah...",
+                options: {
+                    A: "TPS (Throttle Position Sensor)",
+                    B: "ECT (Engine Coolant Temperature Sensor)",
+                    C: "MAF (Mass Air Flow Sensor) / MAP (Manifold Absolute Pressure)",
+                    D: "O2 Sensor (Oxygen Sensor)",
+                    E: "CKP (Crankshaft Position Sensor)"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 4,
+                q: "Apabila pedal kopling saat ditekan terasa sangat ringan dan perpindahan gigi transmisi manual sulit dilakukan atau timbul suara berderik, kemungkinan penyebab utama adalah...",
+                options: {
+                    A: "Minyak rem bercampur dengan air",
+                    B: "Adanya udara pada sistem hidrolik kopling / celah bebas bebas terlalu besar",
+                    C: "Pegas diafragma terlalu keras",
+                    D: "Kanvas kopling terlalu tebal",
+                    E: "Oli transmisi terlalu encer"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 5,
+                q: "Komponen transmisi manual yang berfungsi untuk menyamakan putaran antar roda gigi yang akan ditautkan agar perpindahan gigi berjalan halus tanpa kejutan adalah...",
+                options: {
+                    A: "Shift fork",
+                    B: "Synchronizer ring",
+                    C: "Counter gear",
+                    D: "Input shaft",
+                    E: "Reverse idle gear"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 6,
+                q: "Pada differential (gardan), komponen yang berfungsi membagi putaran roda kiri dan roda kanan saat kendaraan berbelok adalah...",
+                options: {
+                    A: "Drive pinion gear dan Ring gear",
+                    B: "Side gear dan Pinion gear (Differential gear)",
+                    C: "Axle shaft dan Bearing housing",
+                    D: "Spider gear dan Flange coupling",
+                    E: "Crown wheel dan Companion flange"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 7,
+                q: "Gejala steering wheel (kemudi) terasa berat saat diputar ke kanan atau ke kiri pada sistem Power Steering hidrolik dapat disebabkan oleh...",
+                options: {
+                    A: "Tekanan angin ban terlalu tinggi",
+                    B: "Sabuk penggerak (v-belt) pompa power steering kendur atau minyak power steering berkurang",
+                    C: "Minyak rem bocor pada master silinder",
+                    D: "Sudut camber terlalu positif",
+                    E: "Penyetelan rem tangan terlalu pakem"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 8,
+                q: "Sistem rem hidrolik memanfaatkan hukum fisika yang menyatakan bahwa tekanan yang diberikan pada zat cair di dalam ruang tertutup akan diteruskan ke segala arah dengan sama besar. Hukum ini dikenal dengan...",
+                options: {
+                    A: "Hukum Ohm",
+                    B: "Hukum Pascal",
+                    C: "Hukum Bernoulli",
+                    D: "Hukum Faraday",
+                    E: "Hukum Newton III"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 9,
+                q: "Komponen rem cakram yang berfungsi mendorong pad rem agar menjepit piringan rotor saat pedal rem ditekan adalah...",
+                options: {
+                    A: "Master cylinder",
+                    B: "Brake shoe",
+                    C: "Piston caliper",
+                    D: "Proportioning valve",
+                    E: "Brake drum"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 10,
+                q: "Pada sistem kelistrikan otomotif, alternator berfungsi untuk...",
+                options: {
+                    A: "Menyimpan arus listrik searah (DC) dalam jangka panjang",
+                    B: "Menghasilkan arus listrik untuk mengisi baterai dan menyuplai arus saat mesin hidup",
+                    C: "Mengubah energi listrik menjadi energi putar untuk memutar poros engkol",
+                    D: "Menaikkan tegangan baterai dari 12V menjadi 20.000V",
+                    E: "Memutuskan arus listrik jika terjadi korsleting"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 11,
+                q: "Komponen sistem pengapian konvensional yang berfungsi menaikkan tegangan baterai (12Volt) menjadi tegangan tinggi (15.000 - 25.000Volt) adalah...",
+                options: {
+                    A: "Distributor",
+                    B: "Ignition Coil (Koil Pengapian)",
+                    C: "Kondensor",
+                    D: "Platina (Breaker Point)",
+                    E: "Kabel Busi"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 12,
+                q: "Fungsi kondensor yang dipasang secara paralel dengan kontak platina pada sistem pengapian konvensional adalah...",
+                options: {
+                    A: "Menyerap loncatan bunga api pada kontak platina saat mulai membuka",
+                    B: "Meningkatkan Arus pengisian baterai",
+                    C: "Mengatur timing pengapian sesuai putaran mesin",
+                    D: "Menstabilkan tekanan bahan bakar pada karburator",
+                    E: "Mencegah mesin mati saat idle"
+                },
+                correctKey: "A"
+            },
+            {
+                id: 13,
+                q: "Pada sistem pendingin air (water cooling system), komponen yang berfungsi membuka dan menutup saluran air pendingin dari mesin ke radiator berdasarkan suhu air pendingin adalah...",
+                options: {
+                    A: "Water pump",
+                    B: "Thermostat",
+                    C: "Radiator cap (Tutup Radiator)",
+                    D: "Reservoir tank",
+                    E: "Cooling fan"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 14,
+                q: "Tutup radiator memiliki dua katup utama yang mengatur tekanan air pendingin. Kedua katup tersebut adalah...",
+                options: {
+                    A: "Inlet valve dan Outlet valve",
+                    B: "Pressure valve (Katup Tekan) dan Vacuum valve (Katup Vakum)",
+                    C: "Check valve dan Bypass valve",
+                    D: "Thermostatic valve dan Solenoid valve",
+                    E: "Relief valve dan Throttle valve"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 15,
+                q: "Pengukuran berat jenis cairan elektrolit baterai basah yang ideal pada suhu 20 derajat Celcius menggunakan hydrometer adalah...",
+                options: {
+                    A: "1.000 - 1.050",
+                    B: "1.100 - 1.150",
+                    C: "1.260 - 1.280",
+                    D: "1.350 - 1.400",
+                    E: "1.500 - 1.600"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 16,
+                q: "Apabila roda depan kendaraan mengalami aus berlebih hanya pada bagian sisi luar tread (tapak ban), kemungkinan besar kesalahan penyetelan roda (Spooring) terletak pada...",
+                options: {
+                    A: "Sudut Camber terlalu positif",
+                    B: "Sudut Camber terlalu negatif",
+                    C: "Sudut Caster terlalu negatif",
+                    D: "Toe-in terlalu besar",
+                    E: "Kingpin inclination terlalu kecil"
+                },
+                correctKey: "A"
+            },
+            {
+                id: 17,
+                q: "Sistem starter pada mobil tidak mau berputar saat kunci kontak diputar ke posisi START, namun lampu indikator dashboard redup seketika. Penyebab paling logis adalah...",
+                options: {
+                    A: "Busi kotor atau aus",
+                    B: "Tegangan baterai drop / lemah atau terminal baterai kotor/korosi",
+                    C: "Sekring AC putus",
+                    D: "Pompa bensin buntu",
+                    E: "Filter udara tersumbat"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 18,
+                q: "Pada karburator mobil, komponen yang berfungsi memperkaya campuran bahan bakar dan udara saat mesin dingin pertama kali dihidupkan adalah...",
+                options: {
+                    A: "Sistem Idling",
+                    B: "Sistem Choke",
+                    C: "Sistem Akselerasi",
+                    D: "Power system",
+                    E: "Economizer valve"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 19,
+                q: "Alat ukur yang digunakan untuk mengukur keolengan (run-out) dari piringan cakram (disc rotor) atau poros engkol adalah...",
+                options: {
+                    A: "Vernier Caliper (Jangka Sorong)",
+                    B: "Micrometer Luar",
+                    C: "Dial Indicator (Dial Gauge)",
+                    D: "Feeler Gauge",
+                    E: "Cylinder Bore Gauge"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 20,
+                q: "Fungsi dari sistem katup EVAP (Evaporative Emission Control System) pada kendaraan modern adalah...",
+                options: {
+                    A: "Mengurangi gas buang NOX dari knalpot",
+                    B: "Menampung uap bensin dari tangki agar tidak terbuang ke udara bebas dan menyalurkannya ke ruang bakar",
+                    C: "Mencegah akumulasi jelaga pada intake valve",
+                    D: "Menyaring debu udara yang masuk ke turbocharger",
+                    E: "Mendinginkan oli mesin"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 21,
+                q: "Urutan pengencangan baut kepala silinder (cylinder head bolts) pada saat perakitan mesin harus mengikuti prosedur teknis yaitu...",
+                options: {
+                    A: "Dari pinggir luar menuju ke tengah secara melingkar",
+                    B: "Dari bagian tengah menuju ke luar secara menyilang/diagonal dalam beberapa tahap",
+                    C: "Bebas dari baut mana saja asal kencang",
+                    D: "Dari kiri ke kanan secara berurutan",
+                    E: "Dapat menggunakan kunci pas biasa tanpa batas momen"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 22,
+                q: "Apabila knalpot kendaraan mengeluarkan asap putih tebal berbau oli terbakar, kemungkinan komponen mesin yang mengalami keausan adalah...",
+                options: {
+                    A: "Ring kompresi / ring oli piston dan seal katup (valve seal)",
+                    B: "Injektor bahan bakar tersumbat",
+                    C: "Saringan bahan bakar kotor",
+                    D: "Pompa oli macet",
+                    E: "Tali kipas melar"
+                },
+                correctKey: "A"
+            },
+            {
+                id: 23,
+                q: "Pada transmisi otomatis jenis CVT (Continuously Variable Transmission), rasio percepatan diubah secara kontinyu menggunakan...",
+                options: {
+                    A: "Gigi planetari (Planetary gear set)",
+                    B: "Dua buah pulley variabel yang dihubungkan oleh baja berkekuatan tinggi (steel belt)",
+                    C: "Multiple disc clutch kering",
+                    D: "Synchromesh unit konvensional",
+                    E: "Torque rod"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 24,
+                q: "Komponen suspensi yang berfungsi menyerap kejutan berlebihan dari pegas saat melintasi jalan tidak rata agar kendaraan tidak membal-membal adalah...",
+                options: {
+                    A: "Coil spring",
+                    B: "Stabilizer bar",
+                    C: "Shock absorber (Peredam Kejut)",
+                    D: "Lower control arm",
+                    E: "Torsion bar"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 25,
+                q: "Alat diagnosis elektronik yang digunakan untuk membaca kode kerusakan (DTC/Diagnostic Trouble Code) pada kendaraan sistem EFI / OBD-II adalah...",
+                options: {
+                    A: "Multitester Analog",
+                    B: "Scan Tool / Diagnostic Scanner",
+                    C: "Timing Light",
+                    D: "Gas Analyzer",
+                    E: "Compression Tester"
+                },
+                correctKey: "B"
+            }
+        ];
+
+        // QUESTION BANK 2: MULOK PRODUKTIF TKR (25 Questions)
+        const questionsMULOK_TKR = [
+            {
+                id: 1,
+                q: "Alat Pelindung Diri (APD) standar yang wajib digunakan oleh mekanik TKR saat melakukan pekerjaan las atau memotong logam menggunakan gerinda adalah...",
+                options: {
+                    A: "Sarung tangan kain dan kacamata bening biasa",
+                    B: "Kacamata pelindung (Safety Glasses/Goggles), apron, sarung tangan las, dan sepatu safety",
+                    C: "Masker kain dan helm proyek biasa",
+                    D: "Cukup menggunakan sarung tangan karet",
+                    E: "Topi bengkel dan kacamata hitam"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 2,
+                q: "Hasil pembacaan skala utama 12 mm dan skala nonius 0.35 mm pada alat ukur Jangka Sorong (Vernier Caliper) ketelitian 0.05 mm adalah...",
+                options: {
+                    A: "12.05 mm",
+                    B: "12.35 mm",
+                    C: "12.50 mm",
+                    D: "12.85 mm",
+                    E: "15.35 mm"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 3,
+                q: "Pada Mikrometer Luar (Outside Micrometer) kapasitas 25-50 mm, jika selubung luar menunjukkan angka 32.50 mm dan thimble menunjukkan angka 24 (0.24 mm), maka ukuran totalnya adalah...",
+                options: {
+                    A: "32.24 mm",
+                    B: "32.74 mm",
+                    C: "32.50 mm",
+                    D: "50.24 mm",
+                    E: "32.00 mm"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 4,
+                q: "Alat ukur presisi yang digunakan untuk mengukur diameter dalam silinder mesin secara presisi setelah dikombinasikan dengan mikrometer luar adalah...",
+                options: {
+                    A: "Feeler Gauge",
+                    B: "Cylinder Bore Gauge (CBG)",
+                    C: "Dial Indicator",
+                    D: "Depth Gauge",
+                    E: "Screw Pitch Gauge"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 5,
+                q: "Prinsip Budaya Kerja 5S / 5R yang berasal dari Jepang (Seiri, Seiton, Seiso, Seiketsu, Shitsuke) di area bengkel TKR bertujuan untuk...",
+                options: {
+                    A: "Mempercepat waktu pengerjaan servis tanpa memperhatikan kualitas",
+                    B: "Menciptakan lingkungan kerja bengkel yang bersih, rapi, aman, efisien, dan disiplin",
+                    C: "Mengurangi jumlah mekanik di bengkel",
+                    D: "Menghabiskan stok suku cadang lama",
+                    E: "Memenuhi formalitas aturan sekolah saja"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 6,
+                q: "Pengukuran kebocoran arus listrik atau tahanan kabel busi pada kendaraan ringan menggunakan Multitester (Avometer) harus mengatur selektor pada posisi...",
+                options: {
+                    A: "DC Volt (DCV)",
+                    B: "AC Volt (ACV)",
+                    C: "Ohm (Ω)",
+                    D: "DC Ampere (DCA)",
+                    E: "Hz (Hertz)"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 7,
+                q: "Symbol APAR (Alat Pemadam Api Ringan) jenis CO2 sangat cocok digunakan untuk memadamkan kebakaran Kelas C pada bengkel otomotif, yaitu kebakaran yang disebabkan oleh...",
+                options: {
+                    A: "Bahan padat seperti kayu dan kertas",
+                    B: "Bahan cair mudah terbakar seperti bensin dan oli",
+                    C: "Peralatan atau instalasi kelistrikan bertegangan",
+                    D: "Logam berat seperti magnesium",
+                    E: "Gas elpiji"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 8,
+                q: "Kunci momen (Torque Wrench) digunakan saat perakitan komponen mesin TKR dengan tujuan...",
+                options: {
+                    A: "Membuka baut yang macet dan berkarat",
+                    B: "Mengencangkan baut atau mur sesuai dengan kekencangan spesifikasi pabrik",
+                    C: "Mengukur panjang ulir baut",
+                    D: "Memotong baut yang terlalu panjang",
+                    E: "Mempercepat pemutaran mur loose"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 9,
+                q: "Langkah penanganan awal saat rekan kerja terkena tumpahan asam sulfat (air aki zuur) pada kulit di bengkel adalah...",
+                options: {
+                    A: "Diolesi margarin atau minyak goreng",
+                    B: "Bilas langsung dengan air mengalir sebanyak-banyaknya selama minimal 15 menit",
+                    C: "Diberi kain kering dan dibiarkan",
+                    D: "Ditiup dengan udara bertekanan kompresor",
+                    E: "Diberi alkohol 70%"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 10,
+                q: "Manakah di bawah ini yang merupakan contoh limbah B3 (Bahan Berbahaya dan Beracun) hasil operasional bengkel TKR yang wajib ditampung khusus...",
+                options: {
+                    A: "Kardus bekas filter udara",
+                    B: "Oli bekas, kain majun terkontaminasi oli, dan aki bekas",
+                    C: "Plastik pembungkus suku cadang",
+                    D: "Sisa kertas nota perbaikan",
+                    E: "Besi tua potongan knalpot"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 11,
+                q: "Pada pemeriksaan celah busi standar kendaraan ringan, alat ukur yang paling tepat digunakan adalah...",
+                options: {
+                    A: "Jangka sorong",
+                    B: "Feeler Gauge (Thikness Gauge)",
+                    C: "Mikrometer luar",
+                    D: "Mistar baja",
+                    E: "Dial tester"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 12,
+                q: "Alat pengangkat kendaraan yang biasa digunakan di bengkel resmi untuk mengangkat seluruh badan mobil secara hidrolik agar mekanik dapat bekerja di kolong mobil adalah...",
+                options: {
+                    A: "Dongkrak Buaya (Floor Jack)",
+                    B: "Jack Stand (Safety Stand)",
+                    C: "Car Lift (Two Post / Four Post Lift)",
+                    D: "Engine Crane",
+                    E: "Chain Block"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 13,
+                q: "Fungsi dari penggunaan fender cover saat mekanik melakukan perawatan mesin di dalam ruang mesin (engine bay) adalah...",
+                options: {
+                    A: "Agar mesin tidak cepat dingin",
+                    B: "Langkah K3 untuk melindungi cat bodi mobil dari goresan, kotoran oli, atau benturan alat kerja",
+                    C: "Menambah estetika saat difoto",
+                    D: "Menutup pandangan pelanggan",
+                    E: "Mencegah suara mesin bising"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 14,
+                q: "Pada saat mengukur tegangan baterai 12 Volt dengan Multitester Digital, jika kabel probe merah terpasang di kutub negatif dan probe hitam di kutub positif, maka pada layar akan muncul...",
+                options: {
+                    A: "Nilai tegangan dengan tanda minus (-12 V)",
+                    B: "Multitester langsung rusak/terbakar",
+                    C: "Layar blank/mati",
+                    D: "Nilai tegangan dua kali lipat (24 V)",
+                    E: "Peringatan alarm"
+                },
+                correctKey: "A"
+            },
+            {
+                id: 15,
+                q: "Garis batas maksimum dan minimum pada reservoir tank minyak rem berfungsi sebagai penanda...",
+                options: {
+                    A: "Tekanan udara rem",
+                    B: "Volume kecukupan minyak rem dan indikasi keausan pad rem",
+                    C: "Suhu minyak rem",
+                    D: "Tingkat kekentalan oli",
+                    E: "Kadar air dalam minyak rem"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 16,
+                q: "Penggunaan kacamata las bening (clear goggles) pada bengkel TKR digunakan pada saat pekerjaan...",
+                options: {
+                    A: "Mengelas karbit / las karbit",
+                    B: "Menggerinda potongan besi atau menyemprot komponen dengan air duster kompresor",
+                    C: "Mengecat mobil",
+                    D: "Membuka baut roda",
+                    E: "Menyetel katup"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 17,
+                q: "Alat tangan (hand tools) yang tidak boleh dipukul menggunakan palu besi saat penggunaannya karena dapat merusak konstruksinya adalah...",
+                options: {
+                    A: "Pahat dingin (Cold Chisel)",
+                    B: "Penitik (Center Punch)",
+                    C: "Kunci Pas / Kunci Ring",
+                    D: "Palu tembaga",
+                    E: "Palu karet"
+                },
+                correctKey: "C"
+            },
+            {
+                id: 18,
+                q: "Sistem Manajemen Bengkel otomotif yang menerapkan WO (Work Order) bertujuan untuk...",
+                options: {
+                    A: "Menagih biaya perbaikan tanpa perincian",
+                    B: "Menjadi petunjuk instruksi kerja yang sah bagi mekanik dan acuan estimasi perbaikan bagi pelanggan",
+                    C: "Memperlambat pengerjaan mobil",
+                    D: "Menghindari garansi perbaikan",
+                    E: "Menyimpan berkas di gudang"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 19,
+                q: "Tekanan angin ban kendaraan ringan harus diperiksa secara rutin menggunakan alat...",
+                options: {
+                    A: "Tire Pressure Gauge",
+                    B: "Compression Tester",
+                    C: "Vacuum Gauge",
+                    D: "Hydrometer",
+                    E: "Feeler Gauge"
+                },
+                correctKey: "A"
+            },
+            {
+                id: 20,
+                q: "Komponen saringan udara (air filter) tipe kering yang kotor oleh debu halus ringan sebaiknya dibersihkan dengan cara...",
+                options: {
+                    A: "Dicuci dengan bensin",
+                    B: "Disemprot udara bertekanan kompresor dari arah bagian dalam ke bagian luar",
+                    C: "Dicuci dengan deterjen dan dikeringkan di terik matahari",
+                    D: "Dipukul-pukul ke lantai beton",
+                    E: "Diolesi oli mesin"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 21,
+                q: "Warna asap knalpot hitam pekat pada kendaraan bermotor mesin bensin mengindikasikan...",
+                options: {
+                    A: "Pembakaran sempurna",
+                    B: "Campuran bahan bakar dan udara terlalu kaya (terlalu banyak bensin)",
+                    C: "Oli mesin ikut terbakar di ruang bakar",
+                    D: "Air pendingin bocor masuk ke ruang bakar",
+                    E: "Mesin terlalu dingin"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 22,
+                q: "Penggunaan Jack Stand (penyangga keamanan) wajib dipasang setelah mobil diangkat menggunakan dongkrak ketika mekanik akan...",
+                options: {
+                    A: "Membuka kap mesin",
+                    B: "Bekerja di bawah kolong kendaraan dalam jangka waktu tertentu demi keselamatan kerja",
+                    C: "Mencuci kaca mobil",
+                    D: "Memeriksa air wiper",
+                    E: "Menyetel audio mobil"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 23,
+                q: "Istilah Tune-Up pada pemeliharaan berkala kendaraan ringan memiliki arti...",
+                options: {
+                    A: "Modifikasi mesin agar mobil bisa balapan",
+                    B: "Mengembalikan kondisi kinerja mesin kendaraan ke standar spesifikasi pabrik",
+                    C: "Mengganti seluruh komponen mesin dengan yang baru",
+                    D: "Mengecat ulang bodi mobil",
+                    E: "Memperbesar kapasitas silinder (bore-up)"
+                },
+                correctKey: "B"
+            },
+            {
+                id: 24,
+                q: "Penyebab utama timbulnya bau hangus seperti terbakar saat mobil menanjak tajam pada kendaraan transmisi manual adalah...",
+                options: {
+                    A: "Plat kopling mengalami selip dan aus akibat gesekan berlebih",
+                    B: "Ban gundul",
+                    C: "Radiator mendidih",
+                    D: "Minyak rem habis",
+                    E: "Knalpot bocor"
+                },
+                correctKey: "A"
+            },
+            {
+                id: 25,
+                q: "Di bengkel otomotif modern, cairan pembersih yang digunakan untuk membersihkan jelaga karbon pada karburator atau throttle body secara cepat dinamakan...",
+                options: {
+                    A: "Brake Fluid",
+                    B: "Carb & Throttle Body Cleaner",
+                    C: "Radiator Coolant",
+                    D: "Engine Flush",
+                    E: "Penetrating Oil (WD-40)"
+                },
+                correctKey: "B"
+            }
+        ];
+
+        function isWithinSchedule() {
+            const bypass = document.getElementById('toggle-schedule-bypass')?.checked;
+            if (bypass) return true;
+
+            const now = new Date();
+            const currentMins = now.getHours() * 60 + now.getMinutes();
+            const startMins = SCHEDULE.startHour * 60 + SCHEDULE.startMin;
+            const endMins = SCHEDULE.endHour * 60 + SCHEDULE.endMin;
+
+            return currentMins >= startMins && currentMins < endMins;
+        }
+
+        function getRemainingScheduleSeconds() {
+            const now = new Date();
+            const endToday = new Date();
+            endToday.setHours(SCHEDULE.endHour, SCHEDULE.endMin, 0, 0);
+
+            const diffSecs = Math.floor((endToday - now) / 1000);
+            return Math.max(0, diffSecs);
+        }
+
+        function updateScheduleClock() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) + ' WIB';
+            const clockEl = document.getElementById('current-server-time');
+            if (clockEl) clockEl.innerText = timeStr;
+
+            updateScheduleStatus();
+        }
+
+        function updateScheduleStatus() {
+            const banner = document.getElementById('schedule-status-banner');
+            const badge = document.getElementById('session-badge');
+            const btnStart = document.getElementById('btn-start');
+            if (!banner || !badge) return;
+
+            const bypass = document.getElementById('toggle-schedule-bypass')?.checked;
+            const open = isWithinSchedule();
+
+            if (bypass) {
+                banner.className = "p-4 rounded-xl border bg-purple-50 border-purple-200 text-purple-900 space-y-1.5";
+                badge.className = "px-2.5 py-0.5 text-[10px] font-extrabold rounded-full bg-purple-200 text-purple-800 uppercase";
+                badge.innerText = "MODE BYPASS GURU";
+                if (btnStart) btnStart.disabled = false;
+            } else if (open) {
+                banner.className = "p-4 rounded-xl border bg-emerald-50 border-emerald-200 text-emerald-900 space-y-1.5";
+                badge.className = "px-2.5 py-0.5 text-[10px] font-extrabold rounded-full bg-emerald-200 text-emerald-800 uppercase animate-pulse";
+                badge.innerText = "SESI AKTIF (OPEN)";
+                if (btnStart) btnStart.disabled = false;
+            } else {
+                const now = new Date();
+                const currentMins = now.getHours() * 60 + now.getMinutes();
+                const startMins = SCHEDULE.startHour * 60 + SCHEDULE.startMin;
+
+                banner.className = "p-4 rounded-xl border bg-red-50 border-red-200 text-red-900 space-y-1.5";
+                badge.className = "px-2.5 py-0.5 text-[10px] font-extrabold rounded-full bg-red-200 text-red-800 uppercase";
+
+                if (currentMins < startMins) {
+                    badge.innerText = "BELUM DIMULAI (13:10 WIB)";
+                } else {
+                    badge.innerText = "SESI TELAH BERAKHIR (15:30 WIB)";
+                }
+            }
+        }
+
+        setInterval(updateScheduleClock, 1000);
+
+        function handleSubjectChange() {
+            const selectedSubject = document.getElementById('input-subject').value;
+            const currentAttempt = (currentStudent.attempts[selectedSubject] || 0);
+            const warningEl = document.getElementById('login-warning');
+            
+            if (currentAttempt >= MAX_ATTEMPTS) {
+                warningEl.classList.remove('hidden');
+                document.getElementById('btn-start').disabled = true;
+            } else {
+                warningEl.classList.add('hidden');
+                document.getElementById('btn-start').disabled = false;
+            }
+        }
+
+        function startExam(e) {
+            e.preventDefault();
+
+            if (!isWithinSchedule()) {
+                alert("Ujian belum dapat dimulai! Jadwal pengerjaan otomatis adalah pukul 13.10 - 15.30 WIB.");
+                return;
+            }
+
+            const name = document.getElementById('input-name').value.trim();
+            const nis = document.getElementById('input-nis').value.trim();
+            const studentClass = document.getElementById('input-class').value;
+            const selectedSubject = document.getElementById('input-subject').value;
+
+            if (!name || !nis || !studentClass) {
+                alert("Mohon lengkapi semua data biodata siswa!");
+                return;
+            }
+
+            // Check max attempt limit
+            const currentAttempt = (currentStudent.attempts[selectedSubject] || 0) + 1;
+            if (currentAttempt > MAX_ATTEMPTS) {
+                document.getElementById('login-warning').classList.remove('hidden');
+                return;
+            }
+
+            currentStudent.name = name;
+            currentStudent.nis = nis;
+            currentStudent.studentClass = studentClass;
+            currentStudent.selectedSubject = selectedSubject;
+            currentStudent.attempts[selectedSubject] = currentAttempt;
+
+            // Load Subject Questions
+            activeQuestions = (selectedSubject === 'mulok_tkr') ? questionsMULOK_TKR : questionsKK_TKR;
+            currentIndex = 0;
+            studentAnswers = new Array(activeQuestions.length).fill(null);
+            flaggedQuestions = new Array(activeQuestions.length).fill(false);
+
+            // Calculate Available Time Limit
+            const bypass = document.getElementById('toggle-schedule-bypass')?.checked;
+            if (!bypass) {
+                const remainingSecsInSession = getRemainingScheduleSeconds();
+                timeRemaining = Math.min(TIME_LIMIT_SECONDS, remainingSecsInSession);
+            } else {
+                timeRemaining = TIME_LIMIT_SECONDS;
+            }
+
+            // Update Header & UI
+            document.getElementById('nav-student-name').innerText = name;
+            document.getElementById('nav-student-info').innerText = `${studentClass} • ${(selectedSubject === 'mulok_tkr') ? 'Mulok TKR' : 'KK TKR'}`;
+            document.getElementById('header-user-info').classList.remove('hidden');
+
+            const catBadge = document.getElementById('badge-category');
+            catBadge.innerText = (selectedSubject === 'mulok_tkr') ? 'MULOK PRODUKTIF TKR' : 'KOMPETENSI KEAHLIAN TKR';
+
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-exam').classList.remove('hidden');
+
+            renderQuestionGrid();
+            loadQuestion(0);
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            updateTimerDisplay();
+
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    alert("Waktu pengerjaan atau sesi ujian telah habis! Jawaban Anda akan dikumpulkan secara otomatis.");
+                    finalizeExam();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const mins = Math.floor(timeRemaining / 60);
+            const secs = timeRemaining % 60;
+            const formatted = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            const timerEl = document.getElementById('exam-timer');
+            if (timerEl) timerEl.innerText = formatted;
+        }
+
+        function loadQuestion(index) {
+            if (index < 0 || index >= activeQuestions.length) return;
+            currentIndex = index;
+
+            const q = activeQuestions[index];
+            document.getElementById('current-q-num').innerText = index + 1;
+            document.getElementById('q-number-title').innerText = index + 1;
+            document.getElementById('q-text').innerText = q.q;
+
+            // Options Rendering
+            const optionsContainer = document.getElementById('q-options');
+            optionsContainer.innerHTML = '';
+
+            const selectedKey = studentAnswers[index];
+
+            Object.keys(q.options).forEach(key => {
+                const text = q.options[key];
+                const isSelected = (selectedKey === key);
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => selectOption(key);
+                btn.className = `w-full text-left p-4 rounded-xl border-2 transition flex items-start space-x-3 text-xs md:text-sm font-medium ${
+                    isSelected 
+                        ? 'border-amber-500 bg-amber-50 text-slate-900 font-semibold shadow-sm' 
+                        : 'border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-700'
+                }`;
+
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs ${
+                        isSelected ? 'bg-amber-500 text-slate-900' : 'bg-slate-200 text-slate-600'
+                    }">${key}</span>
+                    <span class="flex-1 pt-0.5">${text}</span>
+                `;
+
+                optionsContainer.appendChild(btn);
+            });
+
+            // Update Flag Button State
+            const flagBtn = document.getElementById('btn-flag');
+            const isFlagged = flaggedQuestions[index];
+            if (isFlagged) {
+                flagBtn.className = "px-4 py-2.5 bg-amber-500 text-slate-900 font-bold text-xs rounded-xl shadow transition flex items-center space-x-2";
+                document.getElementById('flag-btn-text').innerText = "Ragu-Ragu (Aktif)";
+            } else {
+                flagBtn.className = "px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-700 font-semibold text-xs rounded-xl border border-amber-200 transition flex items-center space-x-2";
+                document.getElementById('flag-btn-text').innerText = "Ragu-Ragu";
+            }
+
+            // Prev / Next button state
+            document.getElementById('btn-prev').disabled = (index === 0);
+            
+            const nextBtn = document.getElementById('btn-next');
+            if (index === activeQuestions.length - 1) {
+                nextBtn.innerHTML = `<span>Selesai</span> <i class="fa-solid fa-check-double"></i>`;
+                nextBtn.onclick = confirmSubmit;
+            } else {
+                nextBtn.innerHTML = `<span>Berikutnya</span> <i class="fa-solid fa-chevron-right"></i>`;
+                nextBtn.onclick = nextQuestion;
+            }
+
+            renderQuestionGrid();
+        }
+
+        function selectOption(key) {
+            studentAnswers[currentIndex] = key;
+            loadQuestion(currentIndex);
+        }
+
+        function prevQuestion() {
+            if (currentIndex > 0) loadQuestion(currentIndex - 1);
+        }
+
+        function nextQuestion() {
+            if (currentIndex < activeQuestions.length - 1) loadQuestion(currentIndex + 1);
+        }
+
+        function toggleFlag() {
+            flaggedQuestions[currentIndex] = !flaggedQuestions[currentIndex];
+            loadQuestion(currentIndex);
+        }
+
+        function renderQuestionGrid() {
+            const gridContainer = document.getElementById('q-grid');
+            const mobileGridContainer = document.getElementById('q-grid-mobile');
+            if (!gridContainer) return;
+
+            gridContainer.innerHTML = '';
+            let answeredCount = 0;
+
+            activeQuestions.forEach((q, idx) => {
+                const isAnswered = studentAnswers[idx] !== null;
+                const isFlagged = flaggedQuestions[idx];
+                const isCurrent = (currentIndex === idx);
+
+                if (isAnswered) answeredCount++;
+
+                let bgClass = "bg-slate-100 text-slate-700 border-slate-300";
+                if (isAnswered) bgClass = "bg-emerald-500 text-white font-bold border-emerald-600";
+                if (isFlagged) bgClass = "bg-amber-400 text-slate-900 font-bold border-amber-500";
+                
+                let borderExtra = isCurrent ? "ring-2 ring-slate-900 ring-offset-2" : "";
+
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.onclick = () => { loadQuestion(idx); };
+                btn.className = `w-9 h-9 rounded-lg border text-xs font-semibold flex items-center justify-center transition ${bgClass} ${borderExtra}`;
+                btn.innerText = idx + 1;
+
+                gridContainer.appendChild(btn);
+            });
+
+            if (mobileGridContainer) {
+                mobileGridContainer.innerHTML = gridContainer.innerHTML;
+            }
+
+            document.getElementById('answered-count-badge').innerText = `${answeredCount}/${activeQuestions.length} Terjawab`;
+        }
+
+        function toggleMobileGrid() {
+            const drawer = document.getElementById('drawer-mobile-grid');
+            drawer.classList.toggle('hidden');
+        }
+
+        function confirmSubmit() {
+            let answeredCount = 0;
+            let flaggedCount = 0;
+            let emptyCount = 0;
+
+            studentAnswers.forEach((ans, idx) => {
+                if (ans !== null) answeredCount++;
+                else emptyCount++;
+                if (flaggedQuestions[idx]) flaggedCount++;
+            });
+
+            document.getElementById('modal-count-answered').innerText = `${answeredCount} Soal`;
+            document.getElementById('modal-count-flagged').innerText = `${flaggedCount} Soal`;
+            document.getElementById('modal-count-empty').innerText = `${emptyCount} Soal`;
+
+            document.getElementById('modal-confirm').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('modal-confirm').classList.add('hidden');
+        }
+
+        function finalizeExam() {
+            clearInterval(timerInterval);
+            closeModal();
+
+            // Calculate Results
+            let correctCount = 0;
+            let wrongCount = 0;
+            let emptyCount = 0;
+
+            activeQuestions.forEach((q, idx) => {
+                const ans = studentAnswers[idx];
+                if (ans === null) {
+                    emptyCount++;
+                } else if (ans === q.correctKey) {
+                    correctCount++;
+                } else {
+                    wrongCount++;
+                }
+            });
+
+            // Each question = 4 points (25 * 4 = 100)
+            const finalScore = Math.round((correctCount / activeQuestions.length) * 100);
+            const isKompeten = finalScore >= KKM_SCORE;
+
+            const subjKey = currentStudent.selectedSubject;
+            const currentAttemptNo = currentStudent.attempts[subjKey] || 1;
+
+            const now = new Date();
+            const timestampStr = now.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' + now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            // Save to Teacher Recap Local Storage
+            saveExamResultToRecap({
+                id: Date.now(),
+                name: currentStudent.name,
+                nis: currentStudent.nis,
+                studentClass: currentStudent.studentClass,
+                selectedSubject: currentStudent.selectedSubject,
+                attemptNo: currentAttemptNo,
+                score: finalScore,
+                correct: correctCount,
+                wrong: wrongCount,
+                empty: emptyCount,
+                timestamp: timestampStr
+            });
+
+            // Update Result UI
+            document.getElementById('result-score-val').innerText = finalScore;
+            document.getElementById('res-correct').innerText = correctCount;
+            document.getElementById('res-wrong').innerText = wrongCount;
+            document.getElementById('res-empty').innerText = emptyCount;
+            document.getElementById('res-attempt').innerText = `${currentAttemptNo} / ${MAX_ATTEMPTS}`;
+
+            const headerBg = document.getElementById('result-header-bg');
+            const statusIcon = document.getElementById('result-status-icon');
+            const statusTitle = document.getElementById('result-status-title');
+            const statusSub = document.getElementById('result-status-subtitle');
+
+            if (isKompeten) {
+                headerBg.className = "p-8 text-white text-center relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-700";
+                statusIcon.className = "fa-solid fa-trophy text-4xl text-amber-300";
+                statusTitle.innerText = "KOMPETEN";
+                statusSub.innerText = "Selamat! Anda berhasil melampaui KKM (78) pada penilaian kali ini.";
+                
+                try {
+                    confetti({
+                        particleCount: 120,
+                        spread: 80,
+                        origin: { y: 0.6 }
+                    });
+                } catch(e){}
+            } else {
+                headerBg.className = "p-8 text-white text-center relative overflow-hidden bg-gradient-to-r from-red-600 to-rose-700";
+                statusIcon.className = "fa-solid fa-triangle-exclamation text-4xl text-white";
+                statusTitle.innerText = "BELUM KOMPETEN";
+                statusSub.innerText = "Nilai Anda masih di bawah KKM (78). Silakan pelajari kembali materi dan coba lagi.";
+            }
+
+            // Retry button logic
+            const remaining = MAX_ATTEMPTS - currentAttemptNo;
+            document.getElementById('retry-left-count').innerText = remaining;
+            const retryBtn = document.getElementById('btn-retry');
+
+            if (remaining <= 0) {
+                retryBtn.classList.add('hidden');
+            } else {
+                retryBtn.classList.remove('hidden');
+            }
+
+            // Populate Printable Certificate
+            populateCertificate(finalScore, isKompeten, currentAttemptNo);
+
+            // Hide Exam & Show Result View
+            document.getElementById('view-exam').classList.add('hidden');
+            document.getElementById('view-result').classList.remove('hidden');
+        }
+
+        function populateCertificate(score, isKompeten, attemptNo) {
+            document.getElementById('cert-name').innerText = currentStudent.name;
+            document.getElementById('cert-nis').innerText = currentStudent.nis;
+            document.getElementById('cert-class').innerText = currentStudent.studentClass;
+            
+            const subjNameStr = (currentStudent.selectedSubject === 'mulok_tkr') ? 'MULOK PRODUKTIF TKR' : 'KOMPETENSI KEAHLIAN TKR';
+            document.getElementById('cert-subject-title').innerText = subjNameStr;
+            document.getElementById('cert-table-subject').innerText = `${subjNameStr} (${currentStudent.studentClass})`;
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('cert-date').innerText = dateStr;
+            document.getElementById('cert-sign-date').innerText = dateStr;
+
+            const timeSpentSeconds = TIME_LIMIT_SECONDS - timeRemaining;
+            const spentMins = Math.floor(timeSpentSeconds / 60);
+            const spentSecs = timeSpentSeconds % 60;
+            document.getElementById('cert-duration').innerText = `${spentMins} Mnt ${spentSecs} Dtk`;
+
+            document.getElementById('cert-attempt').innerText = `Ke-${attemptNo} dari 3`;
+            document.getElementById('cert-score').innerText = score;
+
+            const statusCell = document.getElementById('cert-status');
+            if (isKompeten) {
+                statusCell.innerHTML = `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold">KOMPETEN</span>`;
+            } else {
+                statusCell.innerHTML = `<span class="px-2 py-0.5 rounded bg-red-100 text-red-800 font-bold">BELUM KOMPETEN</span>`;
+            }
+
+            const hash = 'KBM-' + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById('cert-hash').innerText = hash;
+        }
+
+        function openTeacherModal() {
+            document.getElementById('modal-teacher-auth').classList.remove('hidden');
+        }
+
+        function closeTeacherModal() {
+            document.getElementById('modal-teacher-auth').classList.add('hidden');
+        }
+
+        function verifyTeacherPassword(e) {
+            e.preventDefault();
+            const inputPass = document.getElementById('input-teacher-pass').value.trim();
+            const normalizedInput = inputPass.replace(/\s+/g, '').toUpperCase();
+            const normalizedTarget = TEACHER_PASSWORD.replace(/\s+/g, '').toUpperCase();
+
+            if (normalizedInput === normalizedTarget) {
+                closeTeacherModal();
+                showTeacherRecapView();
+            } else {
+                document.getElementById('pass-error-msg').classList.remove('hidden');
+            }
+        }
+
+        function saveExamResultToRecap(resultData) {
+            let existingRecap = JSON.parse(localStorage.getItem('cbt_tkr_recap_results') || '[]');
+            existingRecap.unshift(resultData);
+            localStorage.setItem('cbt_tkr_recap_results', JSON.stringify(existingRecap));
+        }
+
+        function showTeacherRecapView() {
+            document.getElementById('view-login').classList.add('hidden');
+            document.getElementById('view-exam').classList.add('hidden');
+            document.getElementById('view-result').classList.add('hidden');
+            document.getElementById('view-teacher-recap').classList.remove('hidden');
+
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('recap-sheet-date').innerText = `Tanggal Cetak: ${dateStr}`;
+            document.getElementById('recap-sign-date').innerText = dateStr;
+
+            renderTeacherRecapTable();
+        }
+
+        function renderTeacherRecapTable() {
+            const allResults = JSON.parse(localStorage.getItem('cbt_tkr_recap_results') || '[]');
+            const filterClass = document.getElementById('recap-filter-class').value;
+            const filterSubj = document.getElementById('recap-filter-subject').value;
+            const searchQuery = document.getElementById('recap-search-input').value.toLowerCase().trim();
+
+            const tbody = document.getElementById('recap-table-body');
+            tbody.innerHTML = '';
+
+            let filtered = allResults.filter(item => {
+                const matchClass = (filterClass === 'ALL' || item.studentClass === filterClass);
+                const matchSubj = (filterSubj === 'ALL' || item.selectedSubject === filterSubj);
+                const matchSearch = item.name.toLowerCase().includes(searchQuery) || item.nis.toLowerCase().includes(searchQuery);
+                return matchClass && matchSubj && matchSearch;
+            });
+
+            document.getElementById('recap-stat-total').innerText = filtered.length;
+            
+            if (filtered.length > 0) {
+                const sum = filtered.reduce((acc, curr) => acc + curr.score, 0);
+                const avg = (sum / filtered.length).toFixed(1);
+                document.getElementById('recap-stat-avg').innerText = avg;
+
+                const passed = filtered.filter(i => i.score >= KKM_SCORE).length;
+                document.getElementById('recap-stat-passed').innerText = passed;
+                document.getElementById('recap-stat-failed').innerText = filtered.length - passed;
+            } else {
+                document.getElementById('recap-stat-avg').innerText = '0';
+                document.getElementById('recap-stat-passed').innerText = '0';
+                document.getElementById('recap-stat-failed').innerText = '0';
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" class="p-6 text-center text-slate-400 italic">
+                            Belum ada data rekapitulasi nilai yang tersimpan atau sesuai filter.
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            filtered.forEach((item, idx) => {
+                const tr = document.createElement('tr');
+                tr.className = (idx % 2 === 0) ? 'bg-white' : 'bg-slate-50';
+
+                const subjTitle = (item.selectedSubject === 'mulok_tkr') ? 'Mulok TKR' : 'KK TKR';
+                const isPassed = item.score >= KKM_SCORE;
+                const statusBadge = isPassed 
+                    ? `<span class="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 font-bold text-[10px]">KOMPETEN</span>`
+                    : `<span class="px-2 py-0.5 rounded bg-red-100 text-red-800 font-bold text-[10px]">BELUM KOMPETEN</span>`;
+
+                tr.innerHTML = `
+                    <td class="p-2 border border-slate-300 text-center font-bold">${idx + 1}</td>
+                    <td class="p-2 border border-slate-300 text-center text-[10px] text-slate-600">${item.timestamp || '-'}</td>
+                    <td class="p-2 border border-slate-300 font-semibold text-slate-900">${item.name}</td>
+                    <td class="p-2 border border-slate-300 text-center font-mono">${item.nis}</td>
+                    <td class="p-2 border border-slate-300 text-center font-bold text-slate-800">${item.studentClass}</td>
+                    <td class="p-2 border border-slate-300 text-center">${subjTitle}</td>
+                    <td class="p-2 border border-slate-300 text-center font-bold">${item.attemptNo}</td>
+                    <td class="p-2 border border-slate-300 text-center font-black text-sm">${item.score}</td>
+                    <td class="p-2 border border-slate-300 text-center">${statusBadge}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function clearAllRecapData() {
+            if (confirm("Apakah Anda yakin ingin menghapus SELURUH data rekapitulasi nilai siswa dari memori lokal?")) {
+                localStorage.removeItem('cbt_tkr_recap_results');
+                renderTeacherRecapTable();
+            }
+        }
+
+        function retryExam() {
+            const subjKey = currentStudent.selectedSubject;
+            const used = currentStudent.attempts[subjKey] || 0;
+
+            if (used >= MAX_ATTEMPTS) {
+                alert("Kesempatan ujian Anda untuk mata pelajaran ini sudah habis (maksimal 3 kali).");
+                return;
+            }
+
+            if (confirm("Apakah Anda ingin mengulang ujian sekarang? Halaman akan kembali ke registrasi awal.")) {
+                document.getElementById('view-result').classList.add('hidden');
+                document.getElementById('view-login').classList.remove('hidden');
+                handleSubjectChange();
+            }
+        }
+
+        function confirmExitExam() {
+            if (confirm("Apakah Anda yakin ingin keluar dari ujian? Progres pengerjaan saat ini tidak akan disimpan.")) {
+                clearInterval(timerInterval);
+                document.getElementById('view-exam').classList.add('hidden');
+                document.getElementById('view-login').classList.remove('hidden');
+                document.getElementById('header-user-info').classList.add('hidden');
+            }
+        }
+
+        function goBackToHome() {
+            document.getElementById('view-result').classList.add('hidden');
+            document.getElementById('view-teacher-recap').classList.add('hidden');
+            document.getElementById('view-login').classList.remove('hidden');
+            document.getElementById('header-user-info').classList.add('hidden');
+            handleSubjectChange();
+        }
+
+        function downloadAsImage() {
+            const certElement = document.getElementById('printable-certificate');
+            
+            html2canvas(certElement, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                const subjPrefix = (currentStudent.selectedSubject === 'mulok_tkr') ? 'Mulok' : 'KK_TKR';
+                link.download = `Hasil_Ujian_${subjPrefix}_${currentStudent.name.replace(/\s+/g, '_')}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            }).catch(err => {
+                alert("Gagal mengunduh gambar. Silakan coba lagi.");
+                console.error(err);
+            });
+        }
+
+        function downloadAsPDF() {
+            const { jsPDF } = window.jspdf;
+            const certElement = document.getElementById('printable-certificate');
+
+            html2canvas(certElement, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                useCORS: true
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('p', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
+                const subjPrefix = (currentStudent.selectedSubject === 'mulok_tkr') ? 'Mulok' : 'KK_TKR';
+                pdf.save(`SKHU_PSTS_${subjPrefix}_${currentStudent.name.replace(/\s+/g, '_')}.pdf`);
+            }).catch(err => {
+                alert("Gagal membuat PDF. Silakan coba lagi.");
+                console.error(err);
+            });
+        }
+
+        function downloadRecapPDF() {
+            const { jsPDF } = window.jspdf;
+            const element = document.getElementById('printable-recap-sheet');
+
+            html2canvas(element, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                useCORS: true
+            }).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF('l', 'mm', 'a4');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+
+                pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
+                pdf.save(`Rekap_Nilai_PSTS_TKR_SMK_KBM.pdf`);
+            }).catch(err => {
+                alert("Gagal mengunduh PDF rekap.");
+                console.error(err);
+            });
+        }
+
+        function downloadRecapJPG() {
+            const element = document.getElementById('printable-recap-sheet');
+
+            html2canvas(element, {
+                scale: 2,
+                backgroundColor: '#ffffff',
+                useCORS: true
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = `Rekap_Nilai_PSTS_TKR_SMK_KBM.jpg`;
+                link.href = canvas.toDataURL('image/jpeg', 0.95);
+                link.click();
+            }).catch(err => {
+                alert("Gagal mengunduh Gambar JPG rekap.");
+                console.error(err);
+            });
+        }
+    </script>
+</body>
+</html>
